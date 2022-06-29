@@ -1,0 +1,261 @@
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { mobile, smallMobile } from "../responsive";
+import Select from "react-select";
+import styled from "styled-components";
+
+const Background = styled.div`
+  background: skyblue;
+  padding: 40px 6px;
+  font-family: "PokemonFont";
+`;
+const Container = styled.div`
+  max-width: 800px;
+  margin: 0 auto;
+`;
+const Title = styled.h1`
+  margin-bottom: 20px;
+  ${mobile({
+    fontSize: "25px",
+  })}
+  ${smallMobile({
+    fontSize: "20px",
+  })}
+`;
+const Cards = styled.div`
+  background: white;
+  border-radius: 25px;
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+const Img = styled.img`
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+  max-width: 250px;
+  max-height: 250px;
+`;
+const TextContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+`;
+const Desc = styled.p`
+  text-align: center;
+  margin: 0 10px;
+`;
+const TypeContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space;
+  align-items: center;
+  margin-top: 20px;
+`;
+const Type = styled.p`
+  font-size: 1rem;
+  color: white;
+  padding: 2px 3px 2px 5px;
+  background: ${(props) =>
+    (props.background === "BUG" ? "#ADBD21" : null) ||
+    (props.background === "GRASS" ? "#7BCE52" : null) ||
+    (props.background === "NORMAL" ? "#ADA594" : null) ||
+    (props.background === "FIRE" ? "#F75231" : null) ||
+    (props.background === "WATER" ? "#399CFF" : null) ||
+    (props.background === "ELECTRIC" ? "#FFC631" : null) ||
+    (props.background === "ICE" ? "#5ACEE7" : null) ||
+    (props.background === "FIGHTING" ? "#A55239" : null) ||
+    (props.background === "POISON" ? "#B55AA5" : null) ||
+    (props.background === "GROUND" ? "#D6B552" : null) ||
+    (props.background === "PSYCHIC" ? "#FF73A5" : null) ||
+    (props.background === "FAIRY" ? "#F7B5F7" : null) ||
+    (props.background === "ROCK" ? "#BDA55A" : null) ||
+    (props.background === "GHOST" ? "#6363B5" : null) ||
+    (props.background === "DARK" ? "#735A4A" : null) ||
+    (props.background === "DRAGON" ? "#7b63e7" : null) ||
+    (props.background === "STEEL" ? "#adadc6" : null) ||
+    (props.background === "FLYING" ? "#9CADF7" : null)};
+`;
+const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 30px 0px;
+  gap: 20px;
+`;
+const Button = styled.button`
+  background: #6457a6;
+  border: none;
+  color: white;
+  padding: 6px 80px;
+  border-radius: 10px;
+  ${smallMobile({
+    width: "10px",
+  })}
+  display: flex;
+  justify-content: center;
+`;
+const ChooseButtonContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+const Choose = styled.button`
+  background: #f7b5f7;
+  border: none;
+  color: white;
+  padding: 6px 40px;
+  border-radius: 10px;
+  margin-bottom: 30px;
+`;
+
+const Card = (props) => {
+  const [currentPokemon, setCurrentPokemon] = useState({
+    value: "Bulbasaur",
+    label: "1. Bulbasaur",
+    index: 0,
+    number: 1,
+  });
+  const [pokemonDesc, setPokemonDesc] = useState();
+  const [pokemonTypes, setPokemonTypes] = useState();
+
+  const options = [];
+  const images = [];
+  props.nameList &&
+    props.nameList.map((data, index) => {
+      const str = data.name;
+      const str2 = str.charAt(0).toUpperCase() + str.slice(1);
+      options.push({
+        value: str2,
+        label: index + 1 + ". " + str2,
+        index: index,
+        number: index + 1,
+      });
+      images.push(
+        `https://assets.pokemon.com/assets/cms2/img/pokedex/detail/${String(
+          index + 1
+        ).padStart(3, "0")}.png`
+      );
+    });
+
+  useEffect(async () => {
+    await axios
+      .get(`https://pokeapi.co/api/v2/pokemon-species/${currentPokemon.number}`)
+      .then((res) => {
+        const response = res.data;
+        const text = response.flavor_text_entries;
+        const textLanguage = text.filter((lang) => lang.language.name === "en");
+        setPokemonDesc(textLanguage[1]);
+      });
+    await axios
+      .get(`https://pokeapi.co/api/v2/pokemon/${currentPokemon.number}`)
+      .then((resData) => {
+        const responseData = resData.data;
+        const types = responseData.types;
+        setPokemonTypes(types);
+      });
+  }, [currentPokemon]);
+
+  function handleChange(e) {
+    setCurrentPokemon(options[e.index]);
+  }
+
+  function onClick(button) {
+    if (button === "Next") {
+      const newNumber = currentPokemon.index + 1;
+      setCurrentPokemon(options[newNumber]);
+    }
+    if (button === "Prev") {
+      const newNumber = currentPokemon.index - 1;
+      setCurrentPokemon(options[newNumber]);
+    }
+  }
+
+  function handleRandom() {
+    setCurrentPokemon(options[Math.floor(Math.random() * 150)]);
+  }
+
+  function handleSubmit() {
+    console.log(currentPokemon);
+  }
+
+  return (
+    <Background>
+      <Container>
+        <Title>Choose Your Pokemon!</Title>
+        <Select
+          options={options}
+          placeholder={"Choose your Pokemon!"}
+          onChange={(e) => handleChange(e)}
+          value={currentPokemon}
+        />
+        <Cards>
+          <Img src={images[currentPokemon.index]} />
+          <TextContainer>
+            <h1>{currentPokemon.value}</h1>
+            {pokemonDesc && (
+              <Desc>{pokemonDesc.flavor_text.replace(/(\f)/gm, " ")}</Desc>
+            )}
+          </TextContainer>
+          <TypeContainer>
+            {pokemonTypes &&
+              pokemonTypes.map((data) => {
+                return (
+                  <Type
+                    background={data.type.name.toUpperCase()}
+                    key={data.type.name}
+                  >
+                    {data.type.name.toUpperCase()}
+                  </Type>
+                );
+              })}
+          </TypeContainer>
+          <ButtonContainer>
+            <Button
+              onClick={() => onClick("Prev")}
+              disabled={currentPokemon.index === 0}
+            >
+              Prev
+            </Button>
+            <Button
+              onClick={() => onClick("Next")}
+              disabled={currentPokemon.index === 150}
+            >
+              Next
+            </Button>
+          </ButtonContainer>
+          <ChooseButtonContainer>
+            <Choose onClick={props.onClick}>I Choose You!</Choose>
+            <Choose onClick={handleRandom} style={{ background: "#d82430" }}>
+              Pick one for me!
+            </Choose>
+          </ChooseButtonContainer>
+        </Cards>
+      </Container>
+    </Background>
+  );
+};
+
+export default Card;
+
+router.route("/users").post((req, res) => {
+  const firstName = req.body.firstName;
+  const lastName = req.body.lastName;
+  const username = req.body.username;
+  const password = req.body.password;
+  const pokemon = req.body.pokemon;
+  const newUser = new User({
+    firstName,
+    lastName,
+    username,
+    password,
+    pokemon,
+  });
+
+  newUser.save();
+  console.log(newUser);
+});
