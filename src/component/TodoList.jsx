@@ -234,6 +234,7 @@ const TodoList = (props) => {
   const [userOwned, setUserOwned] = useState();
   const [noteError, setNoteError] = useState("");
   const [error, setError] = useState("");
+
   axios.defaults.baseURL = process.env.REACT_APP_API_KEY;
 
   const formik = useFormik({

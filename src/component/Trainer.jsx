@@ -159,6 +159,8 @@ const Trainer = (props) => {
   const navigate = useNavigate();
   const [duplicateError, setDuplicateError] = useState("");
 
+  axios.defaults.baseURL = process.env.REACT_APP_API_KEY;
+
   const formik = useFormik({
     initialValues: {
       username: "",
