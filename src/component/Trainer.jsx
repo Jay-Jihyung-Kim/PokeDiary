@@ -159,7 +159,7 @@ const Trainer = (props) => {
   const navigate = useNavigate();
   const [duplicateError, setDuplicateError] = useState("");
 
-  axios.defaults.baseURL = process.env.REACT_APP_API_KEY;
+  const baseURL = process.env.REACT_APP_API_URL;
 
   const formik = useFormik({
     initialValues: {
@@ -183,7 +183,7 @@ const Trainer = (props) => {
     validateOnChange: false,
     onSubmit: async (values, { resetForm }) => {
       try {
-        await axios.post("/users", {
+        await axios.post(baseURL + "users", {
           firstName:
             values.firstName.charAt(0).toUpperCase() +
             values.firstName.slice(1).toLowerCase(),

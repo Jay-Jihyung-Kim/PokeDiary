@@ -235,7 +235,7 @@ const TodoList = (props) => {
   const [noteError, setNoteError] = useState("");
   const [error, setError] = useState("");
 
-  axios.defaults.baseURL = process.env.REACT_APP_API_KEY;
+  const baseURL = process.env.REACT_APP_API_URL;
 
   const formik = useFormik({
     initialValues: {
@@ -246,7 +246,7 @@ const TodoList = (props) => {
     onSubmit: async (value, { resetForm }) => {
       try {
         await axios.post(
-          "http://localhost:3001/notes",
+          baseURL + "notes",
           {
             title: value.title,
             content: value.content,
@@ -269,13 +269,13 @@ const TodoList = (props) => {
     setPokemonNumber(e.number);
     setCaughtPokemon(props.options[e.number].value);
     setTimeout(async () => {
-      await axios.delete("http://localhost:3001/todo/" + e.id);
+      await axios.delete(baseURL + "todo/" + e.id);
       setTodoCount(todoCount - 1);
     }, 4000);
   };
 
   const handleDeleteTodo = async (e) => {
-    await axios.delete("http://localhost:3001/todo/" + e);
+    await axios.delete(baseURL + "todo/" + e);
     setTodoCount(todoCount - 1);
   };
 
@@ -297,7 +297,7 @@ const TodoList = (props) => {
     e.preventDefault();
     try {
       const result = await axios.post(
-        "http://localhost:3001/todo",
+        baseURL + "todo",
         {
           content: todoText,
           username: props.user.username,
@@ -315,14 +315,14 @@ const TodoList = (props) => {
   };
 
   const handleDeleteNote = async (e) => {
-    await axios.delete("http://localhost:3001/notes/" + e);
+    await axios.delete(baseURL + "notes/" + e);
     setNoteCount(noteCount - 1);
   };
 
   const changingPokemon = async (e) => {
     if (userOwned.includes(e)) {
       setUserPokemon(e);
-      await axios.put("http://localhost:3001/users", {
+      await axios.put(baseURL + "users", {
         username: props.user.username,
         pokemon: e,
       });
@@ -332,7 +332,7 @@ const TodoList = (props) => {
 
   useEffect(() => {
     const fetchNote = async () => {
-      await axios.get("http://localhost:3001/notes").then((res) => {
+      await axios.get(baseURL + "notes").then((res) => {
         const response = res.data;
         setNotes(response.filter((t) => t.username === props.user.username));
       });
@@ -342,7 +342,7 @@ const TodoList = (props) => {
 
   useEffect(() => {
     const fetchNote = async () => {
-      await axios.get("http://localhost:3001/todo").then((res) => {
+      await axios.get(baseURL + "todo").then((res) => {
         const response = res.data;
         setTodos(response.filter((t) => t.username === props.user.username));
       });
@@ -352,7 +352,7 @@ const TodoList = (props) => {
 
   useEffect(async () => {
     if (props.user.username !== "") {
-      await axios.put("http://localhost:3001/users", {
+      await axios.put(baseURL + "users", {
         username: props.user.username,
         owned: pokemonNumber + 1,
       });
@@ -361,9 +361,7 @@ const TodoList = (props) => {
 
   useEffect(async () => {
     if (props.user.username !== "") {
-      const result = await axios.get(
-        "http://localhost:3001/users/" + props.user.userId
-      );
+      const result = await axios.get(baseURL + "users/" + props.user.userId);
       setUserOwned(result.data.owned);
       setUserPokemon(result.data.pokemon);
       console.log(userOwned);

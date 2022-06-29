@@ -36,6 +36,7 @@ const Text = styled.p`
 
 const Signin = (props) => {
   const [loginError, setLoginError] = useState("");
+  const baseURL = process.env.REACT_APP_API_URL;
   const formik = useFormik({
     initialValues: {
       username: "",
@@ -43,7 +44,7 @@ const Signin = (props) => {
     },
     onSubmit: async (values) => {
       try {
-        const response = await axios.post("http://localhost:3001/auth", {
+        const response = await axios.post(baseURL + "auth", {
           username: values.username.toLowerCase(),
           password: values.password,
         });
