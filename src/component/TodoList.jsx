@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled, { css, keyframes } from "styled-components";
+import { HashLink } from "react-router-hash-link";
 import { mobile } from "../responsive.js";
 import { useFormik } from "formik";
 import axios from "axios";
@@ -538,21 +539,23 @@ const TodoList = (props) => {
             </NoteContentContainer>
           </Card>
         </CardContainer>
-        <NoteContentTitle
-          style={{
-            maxWidth: "180px",
-            backgroundColor: "#d82430",
-            color: "white",
-            fontWeight: "400",
-            marginTop: "40px",
-          }}
-          onClick={handlePokedexOpen}
-        >
-          Pokedex
-        </NoteContentTitle>
+        <HashLink to="#pokedex" style={{ textDecoration: "none" }}>
+          <NoteContentTitle
+            style={{
+              maxWidth: "180px",
+              backgroundColor: "#d82430",
+              color: "white",
+              fontWeight: "400",
+              marginTop: "40px",
+            }}
+            onClick={handlePokedexOpen}
+          >
+            Pokedex
+          </NoteContentTitle>
+        </HashLink>
       </Background>
 
-      <DexBackground status={pokedex}>
+      <DexBackground status={pokedex} id="pokedex">
         <DexContainer>
           {props.images &&
             props.images.map((image, index) => {
