@@ -259,7 +259,7 @@ const TodoList = (props) => {
         setNoteCount(noteCount + 1);
         setNoteError("");
       } catch (err) {
-        setNoteError("Title cannot be Empty!");
+        setNoteError("Title cannot be Empty!!");
       }
     },
   });
