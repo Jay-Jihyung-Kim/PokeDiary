@@ -31,6 +31,7 @@ const Popup = styled.div`
   height: 100%;
   max-width: 800px;
   max-height: 722px;
+  min-height: 560px;
   position: absolute;
   top: 50%; /* position the top  edge of the element at the middle of the parent */
   left: 50%; /* position the left edge of the element at the middle of the parent */
@@ -52,6 +53,8 @@ const Image = styled.img`
   width: 100%;
   padding: 50px;
   background-color: #f8f8f8;
+  object-fit: cover;
+  object-position: 50% 50%;
   border: 4px solid black;
   @media screen and (max-width: 580px) {
     display: none;
@@ -80,6 +83,9 @@ const FilloutContainer = styled.form`
   width: 100%;
   padding-left: 100px;
   margin: 0 auto;
+  @media screen and (max-width: 420px) {
+    padding-left: 60px;
+  }
 `;
 const Label = styled.label``;
 const Input = styled.input`
@@ -95,6 +101,7 @@ const Input = styled.input`
   }
   @media screen and (max-width: 420px) {
     width: 180px;
+    font-size: 13px;
   }
 `;
 const TextContainer = styled.div`
@@ -143,8 +150,10 @@ const Button = styled.button`
   font-family: "PokemonFont";
   font-weight: 700;
   border-radius: 10px;
+  z-index: 9999;
   @media screen and (max-width: 420px) {
     font-size: 12px;
+    margin-left: 25px;
   }
 `;
 
