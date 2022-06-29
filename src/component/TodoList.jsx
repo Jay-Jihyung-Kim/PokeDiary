@@ -122,7 +122,7 @@ const CatchText = styled.p`
 const MyPokemon = styled.img`
   height: 300px;
   width: 300px;
-  margin: 0 0 50px;
+  margin: 0 0 20px;
   ${mobile({ height: "200px", width: "200px" })}
 `;
 
@@ -190,10 +190,11 @@ const NoteButton = styled.button`
 
 const DexBackground = styled.div`
   background-image: url("https://wallpaperaccess.com/full/418495.jpg");
+  background-position: center;
   background-repeat: repeat-y;
   background-size: auto;
   padding: 20px 15px;
-  display: ${(props) => (props.status === "" ? "none" : "block")};
+  display: ${(props) => (props.status === "open" ? "block" : "none")};
 `;
 
 const DexContainer = styled.div`
@@ -230,6 +231,7 @@ const TodoList = (props) => {
   const [catchPokemon, setCatchPokemon] = useState("");
   const [caughtPokemon, setCaughtPokemon] = useState("");
   const [pokemonNumber, setPokemonNumber] = useState();
+  const [pokedex, setPokedex] = useState("closed");
   const [userPokemon, setUserPokemon] = useState({});
   const [userOwned, setUserOwned] = useState();
   const [noteError, setNoteError] = useState("");
@@ -327,8 +329,15 @@ const TodoList = (props) => {
         pokemon: e,
       });
     }
+    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
     console.log(e);
   };
+
+  function handlePokedexOpen() {
+    if (pokedex === "closed") setPokedex("open");
+    if (pokedex === "open") setPokedex("closed");
+    console.log(pokedex);
+  }
 
   useEffect(() => {
     const fetchNote = async () => {
@@ -529,9 +538,21 @@ const TodoList = (props) => {
             </NoteContentContainer>
           </Card>
         </CardContainer>
+        <NoteContentTitle
+          style={{
+            maxWidth: "180px",
+            backgroundColor: "#d82430",
+            color: "white",
+            fontWeight: "400",
+            marginTop: "40px",
+          }}
+          onClick={handlePokedexOpen}
+        >
+          Pokedex
+        </NoteContentTitle>
       </Background>
 
-      <DexBackground status={props.user.username}>
+      <DexBackground status={pokedex}>
         <DexContainer>
           {props.images &&
             props.images.map((image, index) => {

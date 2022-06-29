@@ -53,8 +53,6 @@ const Image = styled.img`
   width: 100%;
   padding: 50px;
   background-color: #f8f8f8;
-  object-fit: cover;
-  object-position: 50% 50%;
   border: 4px solid black;
   @media screen and (max-width: 580px) {
     display: none;
